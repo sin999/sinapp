@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ejb">
+    <output-path>$PROJECT_DIR$/out/artifacts/ejb</output-path>
+    <root id="archive" name="ejb.jar">
+      <element id="module-output" name="ejb" />
+      <element id="jpa-descriptors" facet="ejb/jpa/JPA" />
+    </root>
+  </artifact>
+</component>

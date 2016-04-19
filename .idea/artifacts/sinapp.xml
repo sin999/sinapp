@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="ear" name="sinapp">
+    <output-path>$PROJECT_DIR$/out/artifacts/sinapp</output-path>
+    <root id="archive" name="sinapp.ear">
+      <element id="directory" name="lib">
+        <element id="artifact" artifact-name="common" />
+        <element id="artifact" artifact-name="ejb" />
+      </element>
+      <element id="artifact" artifact-name="web" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/ejb/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

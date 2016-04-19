@@ -1,0 +1,112 @@
+<html>
+<head>
+    <script type="text/javascript" src="js/jquery-2.2.2.min.js" ></script>
+    <link type="text/css" rel="stylesheet" href="js/jsgrid-1.4.1/dist/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="js/jsgrid-1.4.1/dist/jsgrid-theme.min.css" />
+
+    <script type="text/javascript" src="js/jsgrid-1.4.1/dist/jsgrid.min.js"></script>
+
+    <script>
+        $( document ).ready(function() {
+
+            var accounts = [];
+            $.ajax({
+                type: 'GET',
+                url: "http://localhost:8080/web/rest/accounts/get",
+//                callbackParameter: 'callback',
+                dataType: 'json',
+                timeout: 10000,
+                success: function(json) {
+                    if (json.account != null) {
+                        accounts.length=0;
+                        Array.prototype.push.apply(accounts, json.account);
+                    }
+                    $("#jsGrid").jsGrid("refresh");
+                },
+                error: function(){
+                    alert('error')
+                }
+
+            });
+
+            function putAccount(account,callBackSucess,callBackFail){
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json",
+                    url: "http://localhost:8080/web/rest/accounts/put",
+                    dataType: 'json',
+                    data: JSON.stringify(account),
+                    timeout: 10000,
+                    success: callBackSucess,
+                    error: callBackFail
+                });
+
+            }
+
+//            var accounts = [
+//                {"id":"10","amount":10,"owner":"sadam husein"},
+//                {"id":"11","amount":20,"owner":"anna karenina"},
+//                {"id":"12","amount":14,"owner":"eugeny onegin"},
+//                {"id":"13","amount":50,"owner":"���� ������"}
+//                    ];
+
+            $("#jsGrid").jsGrid({
+                width: "60%",
+                height: "400px",
+
+                inserting: true,
+                editing: true,
+                sorting: true,
+                paging: true,
+
+//                data: clients,
+                data: accounts,
+                onItemUpdating: function(args) {
+                    putAccount(args.item,function(json){
+//                        alert("Update success!"+JSON.stringify(json));
+                        accounts[args.itemIndex]=json;
+                    },function(){
+                        alert("Update failed!");
+                        args.cancel = true;})
+                },    // on done of controller.updateItem
+                onItemDeleted: function(args) {
+                    console.log("deleted");
+                },    // on done of controller.deleteItem
+                onItemInserted: function(args) {
+                    putAccount(args.item,function(json){
+//                        alert("Update success!"+JSON.stringify(json));
+//                        accounts[args.itemIndex]=json;
+                        $("#grid").jsGrid("updateItem",json);
+                    },function(){
+                        alert("Update failed!");
+                        args.cancel = true;})
+                },   // on done of controller.insertItem
+                onItemDeleting: function(args) {
+                    // cancel deletion of the item with 'protected' field
+                        args.cancel = true;
+                },
+                fields: [
+                    { name: "id", type: "number", width: 15, },
+                    { name: "amount", type: "number", width: 50 },
+                    { name: "owner", type: "text", width: 200 },
+                    { type: "control" }
+                ]
+            });
+        });
+
+    </script>
+    <style>
+
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="jsGrid" class="center" ></div>
+
+</body>
+</html>
